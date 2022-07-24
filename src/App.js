@@ -24,6 +24,8 @@ function App() {
   useEffect(()=>{
     console.log('ep change')
     console.log(episodes)
+
+    // episodes.forEach(e => console.log(e['word_counts']['total']))
   }, [episodes])
   
 
@@ -31,7 +33,7 @@ function App() {
     <div className="App">
       <div>Hello World</div>
       <div>There are {episodes.length} episodes loaded</div>
-      <BarChart />
+      {/* <BarChart episodes/> */}
     </div>
   );
 }
