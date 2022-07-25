@@ -33,7 +33,7 @@ function App() {
     <div className="App">
       <div>Hello World</div>
       <div>There are {episodes.length} episodes loaded</div>
-      {/* <BarChart episodes/> */}
+      <BarChart episodes={episodes}/>
     </div>
   );
 }

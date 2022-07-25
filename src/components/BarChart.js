@@ -1,55 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import * as d3 from 'd3';
 
 function BarChart(episodes) {
 
+  const svgRef = useRef(null)
+
   const width = 700
   const height = 600
-  const padding = {
-    top: 90,
-    right: 120,
-    bottom: 90,
-    left: 120,
-  }
+  const padding = 90
 
-const yMin = d3.min(episodes, e=>{
-  console.log("e", e)
-  // e['word_counts']['total']}
-  return 2
-})
-// const yMax = d3.max(episodes, e=>e['word_counts']['total'])
-// const snMin = d3.min(episodes, e=>e['season_number'])
-// const snMax = d3.max(episodes, e=>e['season_number'])
-// const epMin = d3.min(episodes, e=>e['episode_number'])
-// const epMax = d3.max(episodes, e=>e['episode_number'])
+  const yMin = d3.min(episodes.episodes, e=>e['word_counts']['total'])
+  const yMax = d3.max(episodes.episodes, e=>e['word_counts']['total'])
+  const yScale = d3.scaleLinear()
+    .domain([0, yMax])
+    .range([height-padding, padding])
 
-// const snScale = d3.scaleBand()
-//   .domain([snMin, snMax])
-//   .range([0, width])
+  const xVals = d3.map(episodes.episodes, e=>e['season_number']*100+e['episode_number'])
+  const xScale = d3.scaleBand()
+    .domain(xVals)
+    .range([padding, width-padding])
 
-// const epScale = d3.scaleBand()
-//   .domain([epMin, epMax])
-//   .range([0, width])
+  console.log(xVals)
+
+  const svgElement = d3.select(svgRef.current)
+  svgElement.selectAll('*').remove()
+
+  const svg = svgElement
+    .append('g')
+
+  svg.selectAll('rect')
+    .data(episodes.episodes)
+    .enter()
+    .append('rect')
+    .attr('x', e=>xScale(e['season_number']*100+e['episode_number']))
+    .attr('y', e=>yScale(e['word_counts']['total']))
+    .attr("width", width/episodes.episodes.length)
+    .attr("height", e=> yScale(0)-yScale(e['word_counts']['total']))
+    .attr("fill", "#B6C649")
 
 
-  const svg = d3.create('svg')
-    .attr('width', width)
-    .attr('height', height)
-
-  // svg.axis()
-  //   .scale(snScale)
-  //   .orient('bottom')
-  
-  // svg.axis()
-  //   .scale(epScale)
-  //   .orient('bottom')
-
-  // svg.selectAll('bar')
-  //   .data(episodes)
-  //   .enter()
-  //   .append('bar')
-
-  return ( svg )
+  return <svg 
+    ref={svgRef} 
+    width={width} 
+    height={height}
+  />
 }
 
 export default BarChart
