@@ -1,5 +1,9 @@
 .App {
   text-align: center;
+  background-color: #2e2e2e;
+  color: #F1F1F1;
+  height: 100vh;
+  width: 100vh;
 }
 
 .App-logo {
@@ -36,3 +40,23 @@
     transform: rotate(360deg);
   }
 }
+
+
+#tooltip {
+  position: absolute;
+  text-align: center;
+  font-size: 0.75rem;
+  border-radius: 5px;
+  padding: 5px;
+  opacity: 0;
+  background-color: #fff;
+}
+
+.axis {
+  color: #F1F1F1;
+}
+
+.bar:hover {
+  filter: brightness(90%)
+}
+
