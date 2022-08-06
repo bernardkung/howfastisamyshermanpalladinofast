@@ -24,16 +24,23 @@ function BarChart(episodes) {
     "#0000ff"
   ]
 
-  const yMin = d3.min(episodes.episodes, e=>e['word_counts']['total'])
-  const yMax = d3.max(episodes.episodes, e=>e['word_counts']['total'])
+  const yMin = d3.min(episodes.episodes, e=>e['count'])
+  const yMax = d3.max(episodes.episodes, e=>e['count'])
   const yScale = d3.scaleLinear()
     .domain([0, yMax])
     .range([height-padding.top, padding.bottom])
 
-  const xVals = d3.map(episodes.episodes, e=>e['season_number']*100+e['episode_number'])
+  const xVals = d3.map(episodes.episodes, e=>e.order)
   const xScale = d3.scaleBand()
     .domain(xVals)
     .range([padding.left, width-padding.right])
+
+  const sVals = [...new Set(episodes.episodes.map(e => e.show))]
+  const sScale = d3.scaleOrdinal()
+    .domain(sVals)
+    .range(d3.schemeTableau10)
+
+  console.log('r', sVals, sScale(sVals[0]))
 
   const tooltip = d3.select('body').append('div')
     .attr('id', 'tooltip')
@@ -42,8 +49,8 @@ function BarChart(episodes) {
     let x = e.pageX
     let y = e.target.getBoundingClientRect().top
 
-    let tooltipHtml = `<strong>${d['season_number']}x${d['episode_number']} - ${d['title']}</strong><br>
-      ${d['word_counts']['total']}`
+    let tooltipHtml = `<strong>${d['season']}x${d['episode']} - ${d['show']}</strong><br>
+      ${d['count']}`
 
     tooltip
       // Add text
@@ -52,12 +59,6 @@ function BarChart(episodes) {
       .style('left', x + 'px')
       .style('top', y + 'px')
       .style('opacity', 0.9)
-      // Data attributes
-      .attr('data-season-number', d['season_number'])
-      .attr('data-episode-number', d['episode_number'])
-      .attr('data-title', d['title'])
-      .attr('data-word-count', d['word_counts']['total'])
-
   }
 
   const mouseleave = (e, d)=>{
@@ -73,11 +74,11 @@ function BarChart(episodes) {
     .data(episodes.episodes)
     .enter()
     .append('rect')
-    .attr('x', e=>xScale(e['season_number']*100+e['episode_number']))
-    .attr('y', e=>yScale(e['word_counts']['total']))
+    .attr('x', e=>xScale(e['order']))
+    .attr('y', e=>yScale(e['count']))
     .attr("width", width/episodes.episodes.length)
-    .attr("height", e=> yScale(0)-yScale(e['word_counts']['total']))
-    .attr("fill", colors[0])
+    .attr("height", e=> yScale(0)-yScale(e['count']))
+    .attr("fill", e=>sScale(e.show))
     .attr("class", "bar")
     .on('mouseover', mouseover)
     .on('mouseleave', mouseleave)

@@ -5,8 +5,8 @@ import React, { useState, useEffect } from 'react';
 import BarChart from './components/BarChart'
 
 
-async function loadData() {
-  return fetch('data/episodes.json')
+async function loadData(url) {
+  return fetch(url)
     .then(r=>r.json())
     .then(data=>data)
 }
@@ -17,7 +17,8 @@ function App() {
 
   // Load Data
   useEffect(() => {
-    loadData()
+    const url = 'data/data.json'
+    loadData(url)
       .then(d=>setEpisodes(d))
   }, []);
 
