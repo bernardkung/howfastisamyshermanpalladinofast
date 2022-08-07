@@ -34,7 +34,7 @@ function App() {
     <div className="App">
       <div>Hello World</div>
       <div>There are {episodes.length} episodes loaded</div>
-      <BarChart episodes={episodes}/>
+      <BarChart episodes={episodes} kpi={"count"}/>
     </div>
   );
 }

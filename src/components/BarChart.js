@@ -1,7 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as d3 from 'd3';
 
-function BarChart(episodes) {
+function BarChart(episodes, kpiType) {
+  [kpi, setKpi] = useState("count")
+  // KPIs
+  // total words (count)
+  // average words per minute (wpm)
+
+  useEffect(()=>{
+    setKpi(kpiType)
+  }, [kpiType])
 
   const svgRef = useRef(null)
 
@@ -24,8 +32,19 @@ function BarChart(episodes) {
     "#0000ff"
   ]
 
-  const yMin = d3.min(episodes.episodes, e=>e['count'])
-  const yMax = d3.max(episodes.episodes, e=>e['count'])
+  function kpi(e) {
+    // KPIs
+    // total words (count)
+    // average words per minute (wpm)
+    if (kpi == 'count') {
+      return e['count']
+    } else if (kpi == 'wpm') {
+      return e['count']/e['runtime']
+    }
+  }
+
+  const yMin = d3.min(episodes.episodes, e=>kpi(e))
+  const yMax = d3.max(episodes.episodes, e=>kpi(e))
   const yScale = d3.scaleLinear()
     .domain([0, yMax])
     .range([height-padding.top, padding.bottom])
@@ -75,9 +94,9 @@ function BarChart(episodes) {
     .enter()
     .append('rect')
     .attr('x', e=>xScale(e['order']))
-    .attr('y', e=>yScale(e['count']))
+    .attr('y', e=>yScale(kpi(e, 'count')))
     .attr("width", width/episodes.episodes.length)
-    .attr("height", e=> yScale(0)-yScale(e['count']))
+    .attr("height", e=> yScale(0)-yScale(kpi(e)))
     .attr("fill", e=>sScale(e.show))
     .attr("class", "bar")
     .on('mouseover', mouseover)
