@@ -1,25 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as d3 from 'd3';
 
-function BarChart(episodes, kpiType) {
-  [kpi, setKpi] = useState("count")
+function BarChart(props) {
   // KPIs
   // total words (count)
   // average words per minute (wpm)
-
-  useEffect(()=>{
-    setKpi(kpiType)
-  }, [kpiType])
-
+  console.log("kpiType", props.kpiType)
   const svgRef = useRef(null)
 
   const width = 900
   const height = 600
   const padding = {
-    left: 120,
-    right: 120,
-    top: 90,
-    bottom: 90,
+    left: 60,
+    right: 30,
+    top: 30,
+    bottom: 30,
   }
 
   const colors = [
@@ -36,25 +31,28 @@ function BarChart(episodes, kpiType) {
     // KPIs
     // total words (count)
     // average words per minute (wpm)
-    if (kpi == 'count') {
+    if (props.kpiType == 'count') {
       return e['count']
-    } else if (kpi == 'wpm') {
+    } else if (props.kpiType == 'wpm') {
       return e['count']/e['runtime']
     }
   }
 
-  const yMin = d3.min(episodes.episodes, e=>kpi(e))
-  const yMax = d3.max(episodes.episodes, e=>kpi(e))
+  const yMin = d3.min(props.episodes, e=>{
+    console.log(kpi(e))
+    return kpi(e)
+  })
+  const yMax = d3.max(props.episodes, e=>kpi(e))
   const yScale = d3.scaleLinear()
     .domain([0, yMax])
     .range([height-padding.top, padding.bottom])
 
-  const xVals = d3.map(episodes.episodes, e=>e.order)
+  const xVals = d3.map(props.episodes, e=>e.order)
   const xScale = d3.scaleBand()
     .domain(xVals)
     .range([padding.left, width-padding.right])
 
-  const sVals = [...new Set(episodes.episodes.map(e => e.show))]
+  const sVals = [...new Set(props.episodes.map(e => e.show))]
   const sScale = d3.scaleOrdinal()
     .domain(sVals)
     .range(d3.schemeTableau10)
@@ -90,12 +88,12 @@ function BarChart(episodes, kpiType) {
     .append('g')
 
   svg.selectAll('rect')
-    .data(episodes.episodes)
+    .data(props.episodes)
     .enter()
     .append('rect')
     .attr('x', e=>xScale(e['order']))
     .attr('y', e=>yScale(kpi(e, 'count')))
-    .attr("width", width/episodes.episodes.length)
+    .attr("width", width/props.episodes.length)
     .attr("height", e=> yScale(0)-yScale(kpi(e)))
     .attr("fill", e=>sScale(e.show))
     .attr("class", "bar")

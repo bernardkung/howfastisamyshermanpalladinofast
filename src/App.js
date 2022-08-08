@@ -3,6 +3,7 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 
 import BarChart from './components/BarChart'
+import KpiSelect from './components/KpiSelect'
 
 
 async function loadData(url) {
@@ -34,7 +35,8 @@ function App() {
     <div className="App">
       <div>Hello World</div>
       <div>There are {episodes.length} episodes loaded</div>
-      <BarChart episodes={episodes} kpi={"count"}/>
+      <KpiSelect />
+      <BarChart episodes={episodes} kpiType="count"/>
     </div>
   );
 }

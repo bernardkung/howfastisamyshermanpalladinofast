@@ -1,9 +1,12 @@
+body {
+  background-color: #ededed;
+}
+
 .App {
   text-align: center;
-  background-color: #2e2e2e;
-  color: #F1F1F1;
-  height: 100vh;
-  width: 100vh;
+  color: #212529;
+  height: 100%;
+  width: 100%;
 }
 
 .App-logo {
@@ -41,6 +44,10 @@
   }
 }
 
+svg {
+  background-color: #fff;
+  border-radius: 4px;
+}
 
 #tooltip {
   position: absolute;
@@ -53,7 +60,7 @@
 }
 
 .axis {
-  color: #F1F1F1;
+  color: #212529;
 }
 
 .bar:hover {
