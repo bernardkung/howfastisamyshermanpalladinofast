@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import * as d3 from 'd3';
+import * as d3 from 'd3'
 
 function BarChart(props) {
   // KPIs
@@ -34,12 +34,12 @@ function BarChart(props) {
     if (props.kpiType == 'count') {
       return e['count']
     } else if (props.kpiType == 'wpm') {
-      return e['count']/e['runtime']
+      return e['count']/Math.max(e['runtime'], 1)
     }
   }
 
   const yMin = d3.min(props.episodes, e=>{
-    console.log(kpi(e))
+    console.log(e['runtime'], kpi(e))
     return kpi(e)
   })
   const yMax = d3.max(props.episodes, e=>kpi(e))
@@ -67,7 +67,7 @@ function BarChart(props) {
     let y = e.target.getBoundingClientRect().top
 
     let tooltipHtml = `<strong>${d['season']}x${d['episode']} - ${d['show']}</strong><br>
-      ${d['count']}`
+      ${Math.round(kpi(d))}`
 
     tooltip
       // Add text
@@ -92,7 +92,7 @@ function BarChart(props) {
     .enter()
     .append('rect')
     .attr('x', e=>xScale(e['order']))
-    .attr('y', e=>yScale(kpi(e, 'count')))
+    .attr('y', e=>yScale(kpi(e)))
     .attr("width", width/props.episodes.length)
     .attr("height", e=> yScale(0)-yScale(kpi(e)))
     .attr("fill", e=>sScale(e.show))

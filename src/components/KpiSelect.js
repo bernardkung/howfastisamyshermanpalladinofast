@@ -1,7 +1,17 @@
-import React, { useState }from "react"
+import React, { useState, useEffect }from "react"
 
-function KpiSelect(){
-    const [kpi, setKpi] = useState("wpm")
+function KpiSelect(props){
+    const [kpi, setKpi] = useState("")
+
+    // Set default KPI
+    useEffect(()=>{
+        setKpi(props.kpiType)
+    }, [])
+
+    // Set parent KPI hook
+    useEffect(()=>{
+        props.setKpiType(kpi)
+    }, [kpi])
 
     return (
         <div>

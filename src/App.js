@@ -15,6 +15,7 @@ async function loadData(url) {
 function App() {
   
   const [episodes, setEpisodes] = useState([])
+  const [kpiType, setKpiType] = useState("count")
 
   // Load Data
   useEffect(() => {
@@ -35,8 +36,8 @@ function App() {
     <div className="App">
       <div>Hello World</div>
       <div>There are {episodes.length} episodes loaded</div>
-      <KpiSelect />
-      <BarChart episodes={episodes} kpiType="count"/>
+      <KpiSelect kpiType={kpiType} setKpiType={setKpiType}/>
+      <BarChart episodes={episodes} kpiType={kpiType}/>
     </div>
   );
 }
